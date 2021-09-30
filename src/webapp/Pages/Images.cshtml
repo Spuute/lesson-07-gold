@@ -1,0 +1,9 @@
+﻿@page
+@model webbapp.Pages.ImagesModel
+@{
+}
+
+@foreach (var uri in Model.allBlobs)
+{
+    <img src="@uri" />
+}
