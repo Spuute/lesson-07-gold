@@ -9,22 +9,25 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Extensions.Configuration;
 
 namespace webbapp.Pages
 {
     public class ImagesModel : PageModel
     {
-         public List<Uri> allBlobs = new List<Uri>();
+        public IConfiguration _config { get; set; }
+        
+        public ImagesModel(IConfiguration config)
+        {
+            _config = config;
+        }
+        public List<Uri> allBlobs = new List<Uri>();
         public async Task<IActionResult> OnGet()
         {
-            string connectionString = "DefaultEndpointsProtocol=https;AccountName=lesson07gold;AccountKey=yxZ6ZzVBkMpylgvyq4+MqRSLUBsibHK/eH5FAV1F24pghALDnTHQh1DOvIovgKm+mnXZm/SC43kGhgkqOp6Cqw==;EndpointSuffix=core.windows.net";
-
+            string connectionString = _config.GetConnectionString("Default");
             var storageAccount = CloudStorageAccount.Parse(connectionString);
-
             var _blobClient = storageAccount.CreateCloudBlobClient();
-
             var _blobContainer = _blobClient.GetContainerReference("imagesba0bde9d-ae96-4310-a026-bd3d81af150d");
-
 
             BlobContinuationToken blobContinuationToken = null;
 
@@ -40,6 +43,6 @@ namespace webbapp.Pages
             } while (blobContinuationToken != null);
 
             return Page();
+        }
     }
-}
 }
